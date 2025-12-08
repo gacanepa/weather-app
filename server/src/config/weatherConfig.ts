@@ -1,3 +1,8 @@
+import dotenv from 'dotenv';
+
+// Load environment variables before accessing them
+dotenv.config();
+
 export interface WeatherConfig {
   apiKey: string;
   baseUrl: string;
