@@ -22,7 +22,7 @@ weather-app/
 
 ## Prerequisites
 
-- Node.js >= 18
+- Node.js >= 20
 - pnpm (package manager)
 - OpenWeatherMap API key (get one at https://openweathermap.org/api)
 
