@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import { WeatherConfig } from '@/config/weatherConfig';
 import {
   ApiErrorResponse,
@@ -22,12 +23,16 @@ export class WeatherController {
       const { city, units = 'metric' } = req.query;
 
       if (!city || typeof city !== 'string') {
-        res.status(400).json({ error: 'City parameter is required' });
+        res.status(StatusCodes.BAD_REQUEST).json({
+          error: ReasonPhrases.BAD_REQUEST,
+        });
         return;
       }
 
       if (!this.apiKey) {
-        res.status(500).json({ error: 'API key is not configured' });
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+          error: ReasonPhrases.INTERNAL_SERVER_ERROR,
+        });
         return;
       }
 
@@ -37,7 +42,9 @@ export class WeatherController {
       
       if (!response.ok) {
         const errorData = await response.json() as ApiErrorResponse;
-        res.status(response.status).json({ error: errorData.message || 'Failed to fetch weather data' });
+        res.status(response.status || StatusCodes.INTERNAL_SERVER_ERROR).json({
+          error: errorData.message || ReasonPhrases.INTERNAL_SERVER_ERROR,
+        });
         return;
       }
 
@@ -52,10 +59,12 @@ export class WeatherController {
         icon: data.weather[0].icon
       };
 
-      res.json(weatherData);
+      res.status(StatusCodes.OK).json(weatherData);
     } catch (error) {
       console.error('Error fetching current weather:', error);
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        error: ReasonPhrases.INTERNAL_SERVER_ERROR,
+      });
     }
   }
 
@@ -64,12 +73,16 @@ export class WeatherController {
       const { city, units = 'metric' } = req.query;
 
       if (!city || typeof city !== 'string') {
-        res.status(400).json({ error: 'City parameter is required' });
+        res.status(StatusCodes.BAD_REQUEST).json({
+          error: ReasonPhrases.BAD_REQUEST,
+        });
         return;
       }
 
       if (!this.apiKey) {
-        res.status(500).json({ error: 'API key is not configured' });
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+          error: ReasonPhrases.INTERNAL_SERVER_ERROR,
+        });
         return;
       }
 
@@ -79,7 +92,9 @@ export class WeatherController {
       
       if (!response.ok) {
         const errorData = await response.json() as ApiErrorResponse;
-        res.status(response.status).json({ error: errorData.message || 'Failed to fetch forecast data' });
+        res.status(response.status || StatusCodes.INTERNAL_SERVER_ERROR).json({
+          error: errorData.message || ReasonPhrases.INTERNAL_SERVER_ERROR,
+        });
         return;
       }
 
@@ -97,10 +112,12 @@ export class WeatherController {
         }))
       };
 
-      res.json(forecastData);
+      res.status(StatusCodes.OK).json(forecastData);
     } catch (error) {
       console.error('Error fetching forecast:', error);
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        error: ReasonPhrases.INTERNAL_SERVER_ERROR,
+      });
     }
   }
 }
