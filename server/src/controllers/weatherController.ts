@@ -18,25 +18,40 @@ export class WeatherController {
     this.baseUrl = config.baseUrl;
   }
 
+  private validateRequest(req: Request, res: Response): { city: string; units: string } | null {
+    const { city, units } = req.query;
+    const unitsValue = typeof units === 'string' ? units : 'metric';
+
+    if (!city || typeof city !== 'string') {
+      res.status(StatusCodes.BAD_REQUEST).json({
+        error: ReasonPhrases.BAD_REQUEST,
+      });
+      return null;
+    }
+
+    if (!this.apiKey) {
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        error: ReasonPhrases.INTERNAL_SERVER_ERROR,
+      });
+      return null;
+    }
+
+    return { city, units: unitsValue };
+  }
+
+  private buildApiUrl(endpoint: string, city: string, units: string): string {
+    return `${this.baseUrl}/${endpoint}?q=${encodeURIComponent(city)}&appid=${this.apiKey}&units=${units}`;
+  }
+
   async getCurrentWeather(req: Request, res: Response): Promise<void> {
     try {
-      const { city, units = 'metric' } = req.query;
-
-      if (!city || typeof city !== 'string') {
-        res.status(StatusCodes.BAD_REQUEST).json({
-          error: ReasonPhrases.BAD_REQUEST,
-        });
+      const validated = this.validateRequest(req, res);
+      if (!validated) {
         return;
       }
 
-      if (!this.apiKey) {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-          error: ReasonPhrases.INTERNAL_SERVER_ERROR,
-        });
-        return;
-      }
-
-      const url = `${this.baseUrl}/weather?q=${encodeURIComponent(city)}&appid=${this.apiKey}&units=${units}`;
+      const { city, units } = validated;
+      const url = this.buildApiUrl('weather', city, units);
       
       const response = await fetch(url);
       
@@ -70,23 +85,13 @@ export class WeatherController {
 
   async getForecast(req: Request, res: Response): Promise<void> {
     try {
-      const { city, units = 'metric' } = req.query;
-
-      if (!city || typeof city !== 'string') {
-        res.status(StatusCodes.BAD_REQUEST).json({
-          error: ReasonPhrases.BAD_REQUEST,
-        });
+      const validated = this.validateRequest(req, res);
+      if (!validated) {
         return;
       }
 
-      if (!this.apiKey) {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-          error: ReasonPhrases.INTERNAL_SERVER_ERROR,
-        });
-        return;
-      }
-
-      const url = `${this.baseUrl}/forecast?q=${encodeURIComponent(city)}&appid=${this.apiKey}&units=${units}`;
+      const { city, units } = validated;
+      const url = this.buildApiUrl('forecast', city, units);
       
       const response = await fetch(url);
       
