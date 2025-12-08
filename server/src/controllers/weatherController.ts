@@ -68,10 +68,14 @@ export class WeatherController {
       const weatherData: WeatherData = {
         city: data.name,
         temperature: data.main.temp,
-        description: data.weather[0].description,
+        description: Array.isArray(data.weather) && data.weather.length > 0
+          ? data.weather[0].description
+          : '',
         humidity: data.main.humidity,
         windSpeed: data.wind.speed,
-        icon: data.weather[0].icon
+        icon: Array.isArray(data.weather) && data.weather.length > 0
+          ? data.weather[0].icon
+          : '',
       };
 
       res.status(StatusCodes.OK).json(weatherData);
@@ -110,10 +114,14 @@ export class WeatherController {
         list: data.list.map((item) => ({
           dt: item.dt,
           temperature: item.main.temp,
-          description: item.weather[0].description,
+          description: Array.isArray(item.weather) && item.weather.length > 0
+            ? item.weather[0].description
+            : '',
           humidity: item.main.humidity,
           windSpeed: item.wind.speed,
-          icon: item.weather[0].icon
+          icon: Array.isArray(item.weather) && item.weather.length > 0
+            ? item.weather[0].icon
+            : '',
         }))
       };
 
