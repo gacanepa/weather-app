@@ -1,68 +1,12 @@
 import { Request, Response } from 'express';
-import { WeatherConfig } from '../config/weatherConfig';
-
-export interface WeatherData {
-  city: string;
-  temperature: number;
-  description: string;
-  humidity: number;
-  windSpeed: number;
-  icon: string;
-}
-
-export interface ForecastData {
-  city: string;
-  list: ForecastItem[];
-}
-
-export interface ForecastItem {
-  dt: number;
-  temperature: number;
-  description: string;
-  humidity: number;
-  windSpeed: number;
-  icon: string;
-}
-
-// OpenWeatherMap API response types
-interface OpenWeatherMapCurrentResponse {
-  name: string;
-  main: {
-    temp: number;
-    humidity: number;
-  };
-  weather: Array<{
-    description: string;
-    icon: string;
-  }>;
-  wind: {
-    speed: number;
-  };
-}
-
-interface OpenWeatherMapForecastResponse {
-  city: {
-    name: string;
-  };
-  list: Array<{
-    dt: number;
-    main: {
-      temp: number;
-      humidity: number;
-    };
-    weather: Array<{
-      description: string;
-      icon: string;
-    }>;
-    wind: {
-      speed: number;
-    };
-  }>;
-}
-
-interface ApiErrorResponse {
-  message?: string;
-}
+import { WeatherConfig } from '@/config/weatherConfig';
+import {
+  ApiErrorResponse,
+  OpenWeatherMapCurrentResponse,
+  OpenWeatherMapForecastResponse,
+  WeatherData,
+  ForecastData,
+} from '@/controllers/types';
 
 export class WeatherController {
   private apiKey: string;
