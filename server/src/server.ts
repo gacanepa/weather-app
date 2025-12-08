@@ -7,7 +7,7 @@ import weatherRoutes from '@/routes/weatherRoutes';
 dotenv.config();
 
 const app: Application = express();
-const PORT: number = Number(process.env.PORT);
+const PORT: number = Number(process.env.PORT) || 3000;
 
 // Middleware
 app.use(cors());
