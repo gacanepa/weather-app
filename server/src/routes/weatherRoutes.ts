@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { WeatherController } from '../controllers/weatherController';
-import { weatherConfig } from '../config/weatherConfig';
+import { WeatherController } from '@/controllers/weatherController';
+import { weatherConfig } from '@/config/weatherConfig';
 
 const router: Router = Router();
 

@@ -1,7 +1,7 @@
 import express, { Application } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import weatherRoutes from './routes/weatherRoutes';
+import weatherRoutes from '@/routes/weatherRoutes';
 
 // Load environment variables
 dotenv.config();
